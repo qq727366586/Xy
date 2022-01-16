@@ -17,6 +17,8 @@ import (
 type Context struct {
 	request  *http.Request
 	responseWriter http.ResponseWriter
+	//是否超时标记
+	hasTimeout bool
 }
 
 func NewContext(r *http.Request, w http.ResponseWriter) *Context {
@@ -24,6 +26,14 @@ func NewContext(r *http.Request, w http.ResponseWriter) *Context {
 		request: r,
 		responseWriter: w,
 	}
+}
+
+func (ctx *Context) SetHasTimeout() {
+	ctx.hasTimeout = true
+}
+
+func (ctx *Context) HasTimeout() bool {
+	return ctx.hasTimeout
 }
 
 //query start
@@ -132,6 +142,22 @@ func (c *Context) BindJson(obj interface{}) error {
 }
 //application/json End
 
+//response
+func (ctx *Context) Json(status int, obj interface{}) error {
+	if ctx.HasTimeout() {
+		return nil
+	}
+	ctx.responseWriter.Header().Set("Content-Type", "application/json")
+	ctx.responseWriter.WriteHeader(status)
+	byt, err := json.Marshal(obj)
+	if err != nil {
+		ctx.responseWriter.WriteHeader(500)
+		return err
+	}
+	ctx.responseWriter.Write(byt)
+	return nil
+}
+//response End
 
 
 //net.context imp start
