@@ -2,7 +2,7 @@
  *@Author luojunying
  *@Date 2022-01-16 19:32
  */
-package framework
+package Xy
 
 import (
 	"fmt"
@@ -20,4 +20,5 @@ func NewCore() *Core {
 //实现net/http包下的ServeHttp
 func (c *Core) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	fmt.Println("init....")
+
 }
