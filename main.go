@@ -17,6 +17,6 @@ func main() {
 		Handler:  core,
 	}
 	if err := server.ListenAndServe(); err != nil {
-		fmt.Println(err)
+		fmt.Printf(err.Error())
 	}
 }
